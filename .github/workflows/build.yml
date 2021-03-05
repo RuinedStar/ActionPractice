@@ -21,10 +21,10 @@ jobs:
           repository: 'microsoft/CBL-Mariner'
           ref: '1.0-stable'
           
-      - name: Set up Go 1.13
+      - name: Set up Go 1.15
         uses: actions/setup-go@v2
         with:
-          go-version: 1.13
+          go-version: 1.15
         id: go
         
       - name: Install Remaining Prerequisites
@@ -35,11 +35,12 @@ jobs:
       - name: ISO Quick Start
         run: |
           pushd toolkit
-          sudo make iso REBUILD_TOOLS=y REBUILD_PACKAGES=n
+          sudo make iso REBUILD_TOOLS=y REBUILD_PACKAGES=n CONFIG_FILE=./imageconfigs/full.json
           popd
       
       - name: Upload the iso image
         uses: actions/upload-artifact@v2
+        if: success()  # upload iso only if previous steps are successful.
         with:
           name: CBL-Mariner
           path: out/images/full/*.iso
